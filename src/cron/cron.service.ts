@@ -17,26 +17,7 @@ export class CronService {
         @InjectRepository(CronRepository)
         private readonly cronRepository: CronRepository,
     ) { }
-
-    async scheduleMailForNotifier(): Promise<void> {
-        try {
-            const emailDetail: Mail.Options = {
-                to: 'mohdaafrin@gmail.com',
-                subject: 'hello world',
-                text: 'hello world',
-                from: 'mohdaafrin@outlook.com'
-            }
-            const emailSent = await this.emailService.sendMail(emailDetail)
-            if (emailSent) {
-                console.log('mail sent')
-            } else {
-                console.log('mail not sent')
-            }
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
+    
     @Timeout(1000)
     async runCronJob(): Promise<void> {
         try {
