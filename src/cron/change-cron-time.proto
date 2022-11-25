@@ -4,8 +4,9 @@ package cronTime;
 
 service CronTimeService {
     rpc ChangeCronTime (DateAndJob) returns (Acknowledgement) {}
-    rpc FindAllJobs (NullMessage) returns (NullMessage) {}
+    rpc FindAllJobs (NullMessage) returns (CronJobs) {}
     rpc CreateCronJob (DateAndJob) returns (CronJob) {}
+    rpc TriggerTimeOutCallback (NullMessage) returns (NullMessage) {}
 }
 
 message DateAndJob {
@@ -18,6 +19,11 @@ message CronJob {
     string cronTime = 2;
     string jobName = 3;
 }
+
+message CronJobs {
+    repeated CronJob jobs = 1;
+}
+
 
 message Acknowledgement {
     bool changed = 1;

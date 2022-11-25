@@ -23,4 +23,9 @@ export class CronController {
     createCronJob(dateAndJobDto: DateAndJobDto) {
         return this.cronService.createCronJob(dateAndJobDto)
     }
+
+    @GrpcMethod('CronTimeService')
+    triggerTimeOutCallback() {
+        return this.cronService.runCronJob()
+    }
 }

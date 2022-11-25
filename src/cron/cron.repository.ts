@@ -17,9 +17,10 @@ export class CronRepository extends Repository<CronJobs>{
         }
     }
 
-    async fetchAllJobs(): Promise<CronJobs[]> {
+    async fetchAllJobs(): Promise<{ jobs: CronJobs[] }> {
         try {
-            return await CronJobs.find()
+            const cronJobs = await CronJobs.find()
+            return { jobs: cronJobs }
         } catch (e) {
             console.log(e)
         }
@@ -37,7 +38,6 @@ export class CronRepository extends Repository<CronJobs>{
     async createCronJob(dateAndJobDto: DateAndJobDto) {
         const { date, name } = dateAndJobDto
         const cronTime = new Date(date)
-        console.log(cronTime)
         const cronJob = new CronJobs
         cronJob.jobName = name
         cronJob.cronTime = cronTime
