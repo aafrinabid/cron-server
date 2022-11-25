@@ -19,7 +19,7 @@ export class CronService {
     @Cron('* */30 2 * * *', {
         name: 'notifier1'
     })
-    async scheduleMailForNotifier1() :Promise<void>{
+    async scheduleMailForNotifier1(): Promise<void> {
         try {
             const emailDetail: Mail.Options = {
                 to: 'mohdaafrin@gmail.com',
@@ -39,7 +39,7 @@ export class CronService {
     }
 
     @Cron('* */15 17 * * *', {
-        name:'notifier2'
+        name: 'notifier2'
     })
     async scheduleMailForNotfier2() {
         this.scheduleMailForNotifier1()
@@ -47,18 +47,17 @@ export class CronService {
 
     @Timeout(1000)
     runCronJob() {
-        try{
-            const cronJobs = ['notifier1','notifier2']
+        try {
+            const cronJobs = ['notifier1', 'notifier2']
             cronJobs.forEach(async (job) => {
                 const cronJob = this.scheduleRegistry.getCronJob(job)
                 const cronTime = await this.cronRepository.getTimeForCronJob(job)
                 const { sec, minutes, hour } = getTimesFromDate(cronTime)
                 cronJob.setTime(`*/${sec} */${minutes} */${hour} * * *`)
             })
-        }catch(e){
+        } catch (e) {
             console.log(e)
         }
-      
     }
 
     async changeDateForNotifier(dateAndJobDto: DateAndJobDto) {

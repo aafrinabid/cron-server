@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { CronService } from './cron.service';
-import { DateAndJobDto} from './date.dto';
+import { DateAndJobDto } from './date.dto';
 
 @Controller('cron')
 export class CronController {
