@@ -3,7 +3,7 @@ import { Cron, SchedulerRegistry, Timeout } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CronRepository } from './cron.repository';
 import { DateAndJobDto } from './date.dto';
-import { CronJob } from './job.entity';
+import { CronJobs } from './job.entity';
 import * as Mail from 'nodemailer/lib/mailer';
 import { EmailService } from 'src/email/email.service';
 
@@ -73,7 +73,7 @@ export class CronService {
         }
     }
 
-    async findAllJobs(): Promise<CronJob[]> {
+    async findAllJobs(): Promise<CronJobs[]> {
         try {
             return await this.cronRepository.fetchAllJobs()
         } catch (e) {
@@ -83,6 +83,7 @@ export class CronService {
 
     async createCronJob(dateAndJobDto: DateAndJobDto) {
         try {
+
             return this.cronRepository.createCronJob(dateAndJobDto)
         } catch (e) {
             console.log(e)

@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class CronJob extends BaseEntity {
+export class CronJobs extends BaseEntity {
     @PrimaryGeneratedColumn()
     id:number;
 

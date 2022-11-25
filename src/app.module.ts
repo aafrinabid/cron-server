@@ -6,6 +6,7 @@ import { CronModule } from './cron/cron.module';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { BullModule } from '@nestjs/bull'
 
 @Module({
   imports: [
@@ -16,6 +17,15 @@ import configuration from './config/configuration';
     ConfigModule.forRoot({
       load:[configuration],
       expandVariables: true
+    }),
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379
+      }
+    }),
+    BullModule.registerQueue({
+      name:'email-que'
     })  
   ],
 })

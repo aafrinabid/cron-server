@@ -1,14 +1,14 @@
 import { Repository } from "typeorm";
 import { DateAndJobDto } from "./date.dto";
-import { CronJob } from "./job.entity";
+import { CronJobs } from "./job.entity";
 
-export class CronRepository extends Repository<CronJob>{
+export class CronRepository extends Repository<CronJobs>{
 
     async UpdateCronJobTime(dateAndJobDto: DateAndJobDto) {
         try {
             const { date, name } = dateAndJobDto
             const cronTime = new Date(date)
-            const cronJob = await CronJob.findOne({ where: { jobName: name } })
+            const cronJob = await CronJobs.findOne({ where: { jobName: name } })
             cronJob.cronTime = cronTime
             await cronJob.save()
             return { changed: true }
@@ -17,9 +17,9 @@ export class CronRepository extends Repository<CronJob>{
         }
     }
 
-    async fetchAllJobs(): Promise<CronJob[]> {
+    async fetchAllJobs(): Promise<CronJobs[]> {
         try {
-            return await CronJob.find()
+            return await CronJobs.find()
         } catch (e) {
             console.log(e)
         }
@@ -27,7 +27,7 @@ export class CronRepository extends Repository<CronJob>{
 
     async getTimeForCronJob(name: string) {
         try {
-            const job = await CronJob.findOne({ where: { jobName: name } })
+            const job = await CronJobs.findOne({ where: { jobName: name } })
             return job.cronTime
         } catch (e) {
             console.log(e)
@@ -38,7 +38,7 @@ export class CronRepository extends Repository<CronJob>{
         const { date, name } = dateAndJobDto
         const cronTime = new Date(date)
         console.log(cronTime)
-        const cronJob = new CronJob
+        const cronJob = new CronJobs
         cronJob.jobName = name
         cronJob.cronTime = cronTime
         await cronJob.save()

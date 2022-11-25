@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { CronJob } from "../cron/job.entity";
+import { CronJobs } from "../cron/job.entity";
 
 export const typeOrmConfig : TypeOrmModuleOptions={
     type:'postgres',
@@ -8,7 +8,7 @@ export const typeOrmConfig : TypeOrmModuleOptions={
     username:'postgres',
     password:'postgres',
     database:'taskmanagement',
-    entities: [CronJob],
+    entities: [CronJobs],
     synchronize:true
 
 }
