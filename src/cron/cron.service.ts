@@ -24,8 +24,7 @@ export class CronService {
             console.log('running for cronjobs')
             const cronJobs: { jobs: CronJobs[] } = await this.cronRepository.fetchAllJobs()
             cronJobs.jobs.forEach(async (job) => {
-                const cronTime = new Date(job.cronTime)
-                const { sec, minutes, hour } = getTimesFromDate(cronTime)
+                const { sec, minutes, hour } = getTimesFromDate(job.cronTime)
                 const cronJob = new CronJob(`${sec} ${minutes} ${hour} * * *`, async () => {
                     try {
                         const emailDetail: Mail.Options = {
