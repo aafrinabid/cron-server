@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package cronTime;
+
+service CronTimeService {
+    rpc ChangeCronTime (DateAndJob) returns (Acknowledgement) {}
+    rpc FindAllJobs (NullMessage) returns (NullMessage) {}
+    rpc CreateCronJob (DateAndJob) returns (CronJob) {}
+}
+
+message DateAndJob {
+    string date = 1;
+    string name = 2;
+}
+
+message CronJob {
+    int32 id = 1;
+    string cronTime = 2;
+    string jobName = 3;
+}
+
+message Acknowledgement {
+    bool changed = 1;
+}
+
+message NullMessage {}
