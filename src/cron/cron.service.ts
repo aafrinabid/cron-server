@@ -7,6 +7,7 @@ import { CronJobs } from './job.entity';
 import * as Mail from 'nodemailer/lib/mailer';
 import { EmailService } from 'src/email/email.service';
 import { CronJob, CronTime } from 'cron';
+import { CronProducerService } from './cron-producer.service';
 
 @Injectable()
 export class CronService {
@@ -16,6 +17,7 @@ export class CronService {
         private scheduleRegistry: SchedulerRegistry,
         @InjectRepository(CronRepository)
         private readonly cronRepository: CronRepository,
+        private readonly cronProducerService: CronProducerService
     ) { }
     
     @Timeout(1000)
@@ -25,26 +27,8 @@ export class CronService {
             const cronJobs: { jobs: CronJobs[] } = await this.cronRepository.fetchAllJobs()
             cronJobs.jobs.forEach(async (job) => {
                 const { sec, minutes, hour } = getTimesFromDate(job.cronTime)
-                const cronJob = new CronJob(`${sec} ${minutes} ${hour} * * *`, async () => {
-                    try {
-                        const emailDetail: Mail.Options = {
-                            to: 'mohdaafrin@gmail.com',
-                            subject: 'hello world',
-                            text: 'hello world',
-                            from: 'mohdaafrin@outlook.com'
-                        }
-                        const emailSent = await this.emailService.sendMail(emailDetail)
-                        if (emailSent) {
-                            console.log('mail sent')
-                        } else {
-                            console.log('mail not sent')
-                        }
-                    } catch (e) {
-                        console.log(e)
-                    }
-                })
-                this.scheduleRegistry.addCronJob(job.jobName, cronJob)
-                cronJob.start()
+                const cronDetail = { sec, minutes, hour, name: job.jobName, id: job.id, firstRun:true}
+                await this.cronProducerService.setCronJob(cronDetail)
             })
         } catch (e) {
             console.log(e)
@@ -77,28 +61,10 @@ export class CronService {
             const { date, name } = dateAndJobDto;
             const cronTime = new Date(date)
             const { sec, minutes, hour } = getTimesFromDate(cronTime)
-            const cronJob = new CronJob(`${sec} ${minutes} ${hour} * * *`, async () => {
-                try {
-                    const emailDetail: Mail.Options = {
-                        to: 'mohdaafrin@gmail.com',
-                        subject: 'hello world',
-                        text: 'hello world',
-                        from: 'mohdaafrin@outlook.com'
-                    }
-                    const emailSent = await this.emailService.sendMail(emailDetail)
-                    if (emailSent) {
-                        console.log('mail sent')
-                    } else {
-                        console.log('mail not sent')
-                    }
-                } catch (e) {
-                    console.log(e)
-                }
-            }
-            )
-            this.scheduleRegistry.addCronJob(name, cronJob)
-            cronJob.start()
-            return await this.cronRepository.createCronJob(dateAndJobDto)
+            const cronData =  await this.cronRepository.createCronJob(dateAndJobDto)
+            const cronDetails = {name, sec, minutes, hour, id: cronData.id, firstRun: false}
+            await this.cronProducerService.setCronJob( cronDetails )
+            return cronData
         } catch (e) {
             console.log(e)
         }
