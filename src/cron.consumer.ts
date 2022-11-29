@@ -11,11 +11,11 @@ export class CronConsumer {
     constructor(
         private emailService: EmailService,
         private scheduleRegistry: SchedulerRegistry,
-        ){}
+    ) { }
 
     @Process('cronjob')
-    async cronjob(job: Job<{task:{id: number, name: string, hour: number , sec: number , minutes: number}}>) {
-        const {sec, minutes, hour, name} = job.data.task
+    async cronjob(job: Job<{ task: { id: number, name: string, hour: number, sec: number, minutes: number } }>) {
+        const { sec, minutes, hour, name } = job.data.task
         const cronJob = new CronJob(`${sec} ${minutes} ${hour} * * *`, async () => {
             try {
                 const emailDetail: Mail.Options = {
@@ -40,4 +40,3 @@ export class CronConsumer {
         return {}
     }
 }
- 

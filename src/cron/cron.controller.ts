@@ -35,7 +35,7 @@ export class CronController {
     }
 
     @Post('/runCron')
-    async runCron () {
+    async runCron() {
         return this.cronService.runCronJob()
     }
 

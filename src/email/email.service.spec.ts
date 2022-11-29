@@ -4,7 +4,7 @@ import * as Mail from 'nodemailer/lib/mailer';
 
 describe('EmailService', () => {
   let service: EmailService;
-  let mailTransport : Mail;
+  let mailTransport: Mail;
   let options: Mail.Options;
   let emailSentDetails: Promise<boolean>;
 
@@ -21,6 +21,6 @@ describe('EmailService', () => {
   });
 
   it('should send mail', async () => {
-    expect(service.sendMail(options)).toBe(emailSentDetails)    
+    expect(service.sendMail(options)).toBe(emailSentDetails)
   })
 });
