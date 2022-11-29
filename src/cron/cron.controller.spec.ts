@@ -1,10 +1,12 @@
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
-import { EmailService } from 'src/email/email.service';
 import { CronProducerService } from './cron-producer.service';
 import { CronController } from './cron.controller';
+import { CronRepository } from './cron.repository';
 import { CronService } from './cron.service';
 import { DateAndJobDto } from './date.dto';
 import { CronJobs } from './job.entity';
+import {BullModule} from '@nestjs/bull'
 
 describe('CronController', () => {
   let controller: CronController;
@@ -16,8 +18,11 @@ describe('CronController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports:[ BullModule.registerQueue({
+        name:'email-que',
+        }),],
       controllers: [CronController],
-      providers: [ CronService, CronProducerService, CronProducerService, EmailService]
+      providers: [ CronService, CronRepository, SchedulerRegistry, CronProducerService ],
     }).compile();
 
     controller = module.get<CronController>(CronController);
@@ -42,5 +47,5 @@ describe('CronController', () => {
     jest.spyOn(service,'findAllJobs').mockImplementation(() => cronjobs)
     expect(await controller.findAllJobs()).toBe(cronjobs)
   })
-  
+
 });

@@ -6,7 +6,7 @@ import { CronRepository } from './cron.repository';
 import { CronService } from './cron.service';
 import { DateAndJobDto } from './date.dto';
 import { CronJobs } from './job.entity';
-
+import {BullModule} from '@nestjs/bull'
 
 describe('CronService', () => {
   let service: CronService;
@@ -18,12 +18,16 @@ describe('CronService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ CronService, CronRepository, SchedulerRegistry ],
+      imports:[ BullModule.registerQueue({
+        name:'email-que',
+        }),],
+      providers: [ CronService, CronRepository, SchedulerRegistry, CronProducerService ],
     }).compile();
 
     service = module.get<CronService>(CronService);
     mockRepository = module.get<CronRepository>(CronRepository);
-    scheduleRegistry = module.get<SchedulerRegistry>(SchedulerRegistry)
+    scheduleRegistry = module.get<SchedulerRegistry>(SchedulerRegistry);
+    cronProducerService = module.get<CronProducerService>(CronProducerService);
   });
 
   it('should be defined', () => {
@@ -34,9 +38,6 @@ describe('CronService', () => {
     let cronJobs: Promise< { jobs: CronJobs[] }>
     let runCronJobResult: Promise<void>
     jest.spyOn(mockRepository,'fetchAllJobs').mockImplementation(async()=>cronJobs)
-    ;(await cronJobs).jobs.forEach(async(job)=> {
-      jest.spyOn(cronProducerService,'setCronJob').mockImplementation(()=> producerServiceResult)
-    })
     expect(await service.runCronJob()).toBe(runCronJobResult)
     })
 
@@ -44,7 +45,6 @@ describe('CronService', () => {
       let cronJob: CronJob;
       let mockRepoResult: Promise< {changed: boolean} >
       jest.spyOn(scheduleRegistry,'getCronJob').mockImplementation(()=>cronJob)
-      cronJob.setTime(new CronTime(dateAndDto.date))
       jest.spyOn(mockRepository,'UpdateCronJobTime').mockImplementation(()=>mockRepoResult)
       expect(await service.changeDateForNotifier(dateAndDto)).toBe(mockRepoResult)
     })
@@ -59,7 +59,7 @@ describe('CronService', () => {
     it('it should fetch all jobs', async () => {
       let cronJobs: Promise< { jobs: CronJobs[] }>
       jest.spyOn(mockRepository,'fetchAllJobs').mockImplementation(()=> cronJobs )
-      expect(await service.findAllJobs()).toBe(() => cronJobs )
+      expect(await service.findAllJobs()).toBe(cronJobs )
     })
-    
+
 });
