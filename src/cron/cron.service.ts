@@ -4,16 +4,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CronRepository } from './cron.repository';
 import { DateAndJobDto } from './date.dto';
 import { CronJobs } from './job.entity';
-import * as Mail from 'nodemailer/lib/mailer';
-import { EmailService } from 'src/email/email.service';
-import { CronJob, CronTime } from 'cron';
+import { CronTime } from 'cron';
 import { CronProducerService } from './cron-producer.service';
 
 @Injectable()
 export class CronService {
 
     constructor(
-        private emailService: EmailService,
         private scheduleRegistry: SchedulerRegistry,
         @InjectRepository(CronRepository)
         private readonly cronRepository: CronRepository,
