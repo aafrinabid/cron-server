@@ -42,4 +42,5 @@ describe('CronController', () => {
     jest.spyOn(service,'findAllJobs').mockImplementation(() => cronjobs)
     expect(await controller.findAllJobs()).toBe(cronjobs)
   })
+  
 });
