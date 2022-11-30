@@ -12,7 +12,6 @@ export class CronConsumer {
 
     @Process('cronjob')
     async cronjob(job: Job<{ task: { id: number, name: string, hour: number, sec: number, minutes: number } }>) {
-        console.log(job)
             try {
                 const emailDetail: Mail.Options = {
                     to: 'mohdaafrin@gmail.com',
