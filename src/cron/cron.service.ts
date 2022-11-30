@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { SchedulerRegistry, Timeout } from '@nestjs/schedule';
+import { Timeout } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CronRepository } from './cron.repository';
 import { DateAndJobDto } from './date.dto';
 import { CronJobs } from './job.entity';
-import { CronTime } from 'cron';
 import { CronProducerService } from './cron-producer.service';
 
 @Injectable()
 export class CronService {
 
     constructor(
-        private scheduleRegistry: SchedulerRegistry,
         @InjectRepository(CronRepository)
         private readonly cronRepository: CronRepository,
         private readonly cronProducerService: CronProducerService

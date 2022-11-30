@@ -1,6 +1,6 @@
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CronJob, CronTime, job } from 'cron';
+import { CronJob} from 'cron';
 import { CronProducerService } from './cron-producer.service';
 import { CronRepository } from './cron.repository';
 import { CronService } from './cron.service';
