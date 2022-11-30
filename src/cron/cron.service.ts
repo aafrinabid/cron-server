@@ -24,7 +24,7 @@ export class CronService {
             const cronJobs: { jobs: CronJobs[] } = await this.cronRepository.fetchAllJobs()
             cronJobs.jobs.forEach(async (job) => {
                 const { sec, minutes, hour } = getTimesFromDate(job.cronTime)
-                const cronDetail = { sec, minutes, hour, name: job.jobName, id: job.id, firstRun: true }
+                const cronDetail = { sec, minutes, hour, name: job.jobName, id: job.id }
                 await this.cronProducerService.setCronJob(cronDetail)
             })
         } catch (e) {
@@ -38,7 +38,7 @@ export class CronService {
             const cronDate = new Date(date)
             const { sec, minutes, hour } = getTimesFromDate(cronDate)
             const result = await this.cronRepository.UpdateCronJobTime(dateAndJobDto)
-            const cronDetails = { sec, minutes, hour, id: result.id, firstRun: false, name }
+            const cronDetails = { sec, minutes, hour, id: result.id, name }
             await this.cronProducerService.setCronJob(cronDetails)
             return result
         } catch (e) {
@@ -60,7 +60,7 @@ export class CronService {
             const cronTime = new Date(date)
             const { sec, minutes, hour } = getTimesFromDate(cronTime)
             const cronData = await this.cronRepository.createCronJob(dateAndJobDto)
-            const cronDetails = { name, sec, minutes, hour, id: cronData.id, firstRun: false }
+            const cronDetails = { name, sec, minutes, hour, id: cronData.id }
             await this.cronProducerService.setCronJob(cronDetails)
             return cronData
         } catch (e) {

@@ -2,7 +2,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
 
-interface CronData { id: number, name: string, hour: number, sec: number, minutes: number, firstRun: boolean }
+interface CronData { id: number, name: string, hour: number, sec: number, minutes: number}
 
 @Injectable()
 export class CronProducerService {
