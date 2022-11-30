@@ -6,6 +6,7 @@ interface CronData { id: number, name: string, hour: number, sec: number, minute
 
 @Injectable()
 export class CronProducerService {
+    
     constructor(@InjectQueue('email-que') private cronQueue: Queue) { }
 
     async setCronJob(data: CronData) {

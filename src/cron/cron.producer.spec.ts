@@ -1,26 +1,25 @@
 import { Test, TestingModule } from "@nestjs/testing"
 import { CronProducerService } from "./cron-producer.service"
 import { BullModule } from '@nestjs/bull';
-import { Job, Queue } from 'bull';
 
-interface CronData { id: number, name: string, hour: number, sec: number, minutes: number}
+interface CronData { id: number, name: string, hour: number, sec: number, minutes: number }
 
 describe('CronProducerService', () => {
     let service: CronProducerService
     let cronData: CronData = {
-        id:1,
-        name:'reminder',
-        hour:1,
-        sec:1,
-        minutes:1,
+        id: 1,
+        name: 'reminder',
+        hour: 1,
+        sec: 1,
+        minutes: 1,
     }
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [BullModule.registerQueue({
                 name: 'email-que',
-              }),],
-            providers:[CronProducerService]
+            }),],
+            providers: [CronProducerService]
         }).compile();
 
         service = module.get<CronProducerService>(CronProducerService)

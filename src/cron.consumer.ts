@@ -12,22 +12,22 @@ export class CronConsumer {
 
     @Process('cronjob')
     async cronjob(job: Job<{ task: { id: number, name: string, hour: number, sec: number, minutes: number } }>) {
-            try {
-                const emailDetail: Mail.Options = {
-                    to: 'mohdaafrin@gmail.com',
-                    subject: 'hello world',
-                    text: 'hello world',
-                    from: 'mohdaafrin@outlook.com'
-                }
-                const emailSent = await this.emailService.sendMail(emailDetail)
-                if (emailSent) {
-                    console.log('mail sent')
-                } else {
-                    console.log('mail not sent')
-                }
-            } catch (e) {
-                console.log(e)
+        try {
+            const emailDetail: Mail.Options = {
+                to: 'mohdaafrin@gmail.com',
+                subject: 'hello world',
+                text: 'hello world',
+                from: 'mohdaafrin@outlook.com'
             }
+            const emailSent = await this.emailService.sendMail(emailDetail)
+            if (emailSent) {
+                console.log('mail sent')
+            } else {
+                console.log('mail not sent')
+            }
+        } catch (e) {
+            console.log(e)
+        }
         return {}
     }
 }
