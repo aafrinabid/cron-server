@@ -11,7 +11,7 @@ export class CronRepository extends Repository<CronJobs>{
             const cronJob = await CronJobs.findOne({ where: { jobName: name } })
             cronJob.cronTime = cronTime
             await cronJob.save()
-            return { changed: true }
+            return { changed: true ,id: cronJob.id }
         } catch (e) {
             console.log(e)
         }

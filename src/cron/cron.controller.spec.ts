@@ -14,7 +14,7 @@ describe('CronController', () => {
   let cronjobs: Promise<{ jobs: CronJobs[] }>;
   let cronJob: Promise<CronJobs>;
   let dateAndDto: DateAndJobDto;
-  let updateCronTimeResult: Promise<{ changed: boolean }>
+  let updateCronTimeResult: Promise<{ changed: boolean, id:number }>
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

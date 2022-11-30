@@ -9,14 +9,11 @@ export class CronProducerService {
     constructor(@InjectQueue('email-que') private cronQueue: Queue) { }
 
     async setCronJob(data: CronData) {
-        const job = await this.cronQueue.getJob(data.id)
-        if (data.firstRun && job) {
-            job.remove()
-        }
         await this.cronQueue.add('cronjob', {
             task: data
         }, {
-            jobId: data.id
+            jobId: data.id,
+            repeat: { cron:`${data.sec} ${data.minutes} ${data.hour} * * *` },
         })
     }
 }
