@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing"
 import { CronProducerService } from "./cron-producer.service"
 import { BullModule } from '@nestjs/bull';
 
-interface CronData { id: number, name: string, hour: number, sec: number, minutes: number }
+interface CronData { id: number, name: string, hour: number, sec: number, minutes: number, repeatId: any}
 
 describe('CronProducerService', () => {
     let service: CronProducerService
@@ -12,6 +12,7 @@ describe('CronProducerService', () => {
         hour: 1,
         sec: 1,
         minutes: 1,
+        repeatId:'1'
     }
 
     beforeEach(async () => {

@@ -13,10 +13,11 @@ export class CronConsumer {
     @Process('cronjob')
     async cronjob(job: Job<{ task: { id: number, name: string, hour: number, sec: number, minutes: number } }>) {
         try {
+            console.log(job)
             const emailDetail: Mail.Options = {
                 to: 'mohdaafrin@gmail.com',
-                subject: 'hello world',
-                text: 'hello world',
+                subject: `${job.data.task.hour} ${job.data.task.minutes} id: ${job.data.task.id}`,
+                text: `${job.data.task.name}`,
                 from: 'mohdaafrin@outlook.com'
             }
             const emailSent = await this.emailService.sendMail(emailDetail)

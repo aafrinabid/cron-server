@@ -43,7 +43,7 @@ describe('CronService', () => {
 
   it('should change the reminder date', async () => {
     let cronJob: CronJob;
-    let mockRepoResult: Promise<{ changed: boolean, id:number }>
+    let mockRepoResult: Promise<{ changed: boolean, id:number, repeatId: string }>
     jest.spyOn(scheduleRegistry, 'getCronJob').mockImplementation(() => cronJob)
     jest.spyOn(mockRepository, 'UpdateCronJobTime').mockImplementation(() => mockRepoResult)
     expect(await service.changeDateForNotifier(dateAndDto)).toBe(mockRepoResult)

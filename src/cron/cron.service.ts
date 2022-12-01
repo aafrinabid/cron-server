@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Timeout } from '@nestjs/schedule';
+import { Cron, Timeout } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CronRepository } from './cron.repository';
 import { DateAndJobDto } from './date.dto';
 import { CronJobs } from './job.entity';
 import { CronProducerService } from './cron-producer.service';
+import { JobId } from 'bull'
+
+interface CronData { id: number, name: string, hour: number, sec: number, minutes: number, repeatId: any }
 
 @Injectable()
 export class CronService {
@@ -15,6 +18,13 @@ export class CronService {
         private readonly cronProducerService: CronProducerService
     ) { }
 
+    @Cron('*/30 * * * * *')
+    async checkQueue() {
+        console.log('cron is running')
+        let allTasks: CronData[] = await this.cronRepository.checkCronJobs()
+        await this.cronProducerService.checkCronJobs(allTasks)
+    }
+
     @Timeout(1000)
     async runCronJob(): Promise<void> {
         try {
@@ -22,7 +32,7 @@ export class CronService {
             const cronJobs: { jobs: CronJobs[] } = await this.cronRepository.fetchAllJobs()
             cronJobs.jobs.forEach(async (job) => {
                 const { sec, minutes, hour } = getTimesFromDate(job.cronTime)
-                const cronDetail = { sec, minutes, hour, name: job.jobName, id: job.id }
+                const cronDetail: CronData = { sec, minutes, hour, name: job.jobName, id: job.id, repeatId: job.repeatId }
                 await this.cronProducerService.setCronJob(cronDetail)
             })
         } catch (e) {
@@ -36,7 +46,7 @@ export class CronService {
             const cronDate = new Date(date)
             const { sec, minutes, hour } = getTimesFromDate(cronDate)
             const result = await this.cronRepository.UpdateCronJobTime(dateAndJobDto)
-            const cronDetails = { sec, minutes, hour, id: result.id, name }
+            const cronDetails :CronData = { sec, minutes, hour, id: result.id, name, repeatId: result.repeatId }
             await this.cronProducerService.setCronJob(cronDetails)
             return result
         } catch (e) {
@@ -58,7 +68,7 @@ export class CronService {
             const cronTime = new Date(date)
             const { sec, minutes, hour } = getTimesFromDate(cronTime)
             const cronData = await this.cronRepository.createCronJob(dateAndJobDto)
-            const cronDetails = { name, sec, minutes, hour, id: cronData.id }
+            const cronDetails: CronData = { name, sec, minutes, hour, id: cronData.id, repeatId: cronData.repeatId }
             await this.cronProducerService.setCronJob(cronDetails)
             return cronData
         } catch (e) {
@@ -67,7 +77,7 @@ export class CronService {
     }
 }
 
-function getTimesFromDate(date: Date) {
+export function getTimesFromDate(date: Date) {
     const sec = date.getSeconds()
     const minutes = date.getMinutes()
     const hour = date.getHours()
