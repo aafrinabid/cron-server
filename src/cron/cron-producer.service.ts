@@ -37,7 +37,6 @@ export class CronProducerService {
             if(bullJob) {
                 return
             } else{
-                console.log('ammmmmmmmmmmmmmmmmmm')
                const queueJob = await this.cronQueue.add('cronjob', {
                     task: job
                 }, {
