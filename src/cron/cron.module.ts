@@ -15,6 +15,7 @@ import { CronProducerService } from './cron-producer.service';
     }),
  ],
   providers: [CronService, CronRepository, CronProducerService],
-  controllers: [CronController]
+  controllers: [CronController],
+  exports: [CronRepository]
 })
 export class CronModule {}

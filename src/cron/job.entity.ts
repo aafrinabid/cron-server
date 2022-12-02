@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { JobId } from 'bull'
 
 @Entity()
 export class CronJobs extends BaseEntity {
@@ -10,4 +11,7 @@ export class CronJobs extends BaseEntity {
 
     @Column()
     cronTime: Date;
+
+    @Column({nullable:true})
+    repeatId: string
 }
