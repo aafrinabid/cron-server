@@ -2,10 +2,11 @@ import { Test, TestingModule } from "@nestjs/testing"
 import { CronProducerService } from "./cron-producer.service"
 import { BullModule } from '@nestjs/bull';
 import { CronData } from "./cron-data.interface";
-import { Type } from "@nestjs/common";
+import { CronRepository } from "./cron.repository";
 
 describe('CronProducerService', () => {
     let service: CronProducerService
+    let mockRepository: CronRepository
     let cronData: CronData = {
         id: 1,
         name: 'reminder',
@@ -20,10 +21,12 @@ describe('CronProducerService', () => {
             imports: [BullModule.registerQueue({
                 name: 'email-que',
             }),],
-            providers: [CronProducerService]
+            providers: [CronProducerService, CronRepository]
         }).compile();
 
         service = module.get<CronProducerService>(CronProducerService)
+        mockRepository = module.get<CronRepository>(CronRepository)
+
     })
 
     it('should be defined', async () => {
@@ -32,6 +35,8 @@ describe('CronProducerService', () => {
 
     it('should add the job to que', async () => {
         let producerSerivceResult: Promise<void>
+        jest.spyOn(mockRepository,'updateRepeatId').mockImplementation(() => producerSerivceResult)
         expect(await service.setCronJob(cronData)).toBe(producerSerivceResult)
     })
+
 })

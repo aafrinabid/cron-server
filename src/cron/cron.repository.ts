@@ -8,7 +8,7 @@ import { CronUpdateResult } from "./update-cron.interface";
 
 export class CronRepository extends Repository<CronJobs>{
 
-    async UpdateCronJobTime(dateAndJobDto: DateAndJobDto): Promise<CronUpdateResult> {
+    async updateCronJobTime(dateAndJobDto: DateAndJobDto): Promise<CronUpdateResult> {
         try {
             const { date, name } = dateAndJobDto
             const cronTime = new Date(date)

@@ -7,6 +7,7 @@ import { CronService } from './cron.service';
 import { DateAndJobDto } from './date.dto';
 import { CronJobs } from './job.entity';
 import { BullModule } from '@nestjs/bull'
+import { CronUpdateResult } from './update-cron.interface';
 
 describe('CronService', () => {
   let service: CronService;
@@ -43,9 +44,9 @@ describe('CronService', () => {
 
   it('should change the reminder date', async () => {
     let cronJob: CronJob;
-    let mockRepoResult: Promise<{ changed: boolean, id:number, repeatId: string }>
+    let mockRepoResult: Promise<CronUpdateResult>
     jest.spyOn(scheduleRegistry, 'getCronJob').mockImplementation(() => cronJob)
-    jest.spyOn(mockRepository, 'UpdateCronJobTime').mockImplementation(() => mockRepoResult)
+    jest.spyOn(mockRepository, 'updateCronJobTime').mockImplementation(() => mockRepoResult)
     expect(await service.changeDateForNotifier(dateAndDto)).toBe(mockRepoResult)
   })
 
@@ -61,5 +62,5 @@ describe('CronService', () => {
     jest.spyOn(mockRepository, 'fetchAllJobs').mockImplementation(() => cronJobs)
     expect(await service.findAllJobs()).toBe(cronJobs)
   })
-
+  
 });

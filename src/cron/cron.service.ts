@@ -38,7 +38,7 @@ export class CronService {
             const { date, name } = dateAndJobDto
             const cronDate = new Date(date)
             const { sec, minutes, hour } = getTimesFromDate(cronDate)
-            const result = await this.cronRepository.UpdateCronJobTime(dateAndJobDto)
+            const result = await this.cronRepository.updateCronJobTime(dateAndJobDto)
             const cronDetails: CronData = { sec, minutes, hour, id: result.id, name, repeatId: result.repeatId }
             await this.cronProducerService.setCronJob(cronDetails)
             return result

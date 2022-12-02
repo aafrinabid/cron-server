@@ -12,24 +12,24 @@ export class CronConsumer {
     ) { }
 
     @Process('cronjob')
-    async cronjob(job: Job<{ task: CronData }>) {
+    async cronjob(job: Job<{ task: CronData }>): Promise<{ consumed: boolean }> {
         try {
-            console.log(job)
             const emailDetail: Mail.Options = {
                 to: 'mohdaafrin@gmail.com',
-                subject: `${job.data.task.hour} ${job.data.task.minutes} id: ${job.data.task.id}`,
-                text: `${job.data.task.name}`,
+                subject: `helloworld`,
+                text: `helloworld`,
                 from: 'mohdaafrin@outlook.com'
             }
             const emailSent = await this.emailService.sendMail(emailDetail)
             if (emailSent) {
                 console.log('mail sent')
             } else {
-                console.log('mail not sent')
+                // console.log('mail not sent')
             }
+            return { consumed: true }
         } catch (e) {
             console.log(e)
         }
-        return {}
+        
     }
 }
