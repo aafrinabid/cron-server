@@ -1,31 +1,23 @@
-import { Controller } from '@nestjs/common';
-import { GrpcMethod } from '@nestjs/microservices';
+import { Body, Controller, Patch, Post } from '@nestjs/common';
 import { CronService } from './cron.service';
 import { DateAndJobDto } from './date.dto';
+import { CronJobs } from './job.entity';
+import { CronUpdateResult } from './update-cron.interface';
 
 @Controller('cron')
 export class CronController {
+
     constructor(
         private cronService: CronService
     ) { }
 
-    @GrpcMethod('CronTimeService')
-    changeCronTime(dateAndJobDto: DateAndJobDto) {
-        return this.cronService.changeDateForNotifier(dateAndJobDto)
+    @Post('/job')
+    async createJob(@Body() dateAndDto: DateAndJobDto): Promise<CronJobs> {
+        return this.cronService.createCronJob(dateAndDto)
     }
 
-    @GrpcMethod('CronTimeService')
-    findAllJobs() {
-        return this.cronService.findAllJobs()
-    }
-
-    @GrpcMethod('CronTimeService')
-    createCronJob(dateAndJobDto: DateAndJobDto) {
-        return this.cronService.createCronJob(dateAndJobDto)
-    }
-
-    @GrpcMethod('CronTimeService')
-    triggerTimeOutCallback() {
-        return this.cronService.runCronJob()
+    @Patch('/job')
+    async updateJob(@Body() dateAndDto: DateAndJobDto): Promise<CronUpdateResult> {
+        return this.cronService.changeDateForNotifier(dateAndDto)
     }
 }

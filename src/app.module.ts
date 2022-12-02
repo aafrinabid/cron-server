@@ -7,6 +7,8 @@ import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { BullModule } from '@nestjs/bull'
+import { CronConsumer } from './cron.consumer';
+import { CronProducerService } from './cron/cron-producer.service';
 
 @Module({
   imports: [
@@ -25,8 +27,10 @@ import { BullModule } from '@nestjs/bull'
       }
     }),
     BullModule.registerQueue({
-      name:'email-que'
-    })  
+      name: 'email-que'
+    })
   ],
+  providers:[CronProducerService, CronConsumer]
 })
+
 export class AppModule {}
