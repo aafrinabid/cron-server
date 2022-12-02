@@ -5,7 +5,6 @@ import { CronRepository } from './cron.repository';
 import { DateAndJobDto } from './date.dto';
 import { CronJobs } from './job.entity';
 import { CronProducerService } from './cron-producer.service';
-import { JobId } from 'bull'
 import { CronData } from './cron-data.interface';
 import { CronUpdateResult } from './update-cron.interface';
 

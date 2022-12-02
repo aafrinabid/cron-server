@@ -1,6 +1,4 @@
-import { job } from "cron";
 import { Repository } from "typeorm";
-import { getTimesFromDate } from "./cron.service";
 import { DateAndJobDto } from "./date.dto";
 import { CronJobs } from "./job.entity";
 import { JobId } from 'bull'
