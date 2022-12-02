@@ -1,8 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing"
 import { CronProducerService } from "./cron-producer.service"
 import { BullModule } from '@nestjs/bull';
-
-interface CronData { id: number, name: string, hour: number, sec: number, minutes: number, repeatId: any}
+import { CronData } from "./cron-data.interface";
+import { Type } from "@nestjs/common";
 
 describe('CronProducerService', () => {
     let service: CronProducerService

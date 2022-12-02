@@ -1,6 +1,7 @@
 import { Processor, Process } from '@nestjs/bull';
 import { Job } from 'bull';
 import * as Mail from 'nodemailer/lib/mailer';
+import { CronData } from './cron/cron-data.interface';
 import { EmailService } from './email/email.service';
 
 @Processor('email-que')
@@ -11,7 +12,7 @@ export class CronConsumer {
     ) { }
 
     @Process('cronjob')
-    async cronjob(job: Job<{ task: { id: number, name: string, hour: number, sec: number, minutes: number } }>) {
+    async cronjob(job: Job<{ task: CronData }>) {
         try {
             console.log(job)
             const emailDetail: Mail.Options = {

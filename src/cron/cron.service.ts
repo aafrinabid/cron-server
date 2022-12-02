@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Cron, Timeout } from '@nestjs/schedule';
+import { Timeout } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CronRepository } from './cron.repository';
 import { DateAndJobDto } from './date.dto';
 import { CronJobs } from './job.entity';
 import { CronProducerService } from './cron-producer.service';
 import { JobId } from 'bull'
-
-interface CronData { id: number, name: string, hour: number, sec: number, minutes: number, repeatId: any }
+import { CronData } from './cron-data.interface';
+import { CronUpdateResult } from './update-cron.interface';
 
 @Injectable()
 export class CronService {
@@ -17,13 +17,6 @@ export class CronService {
         private readonly cronRepository: CronRepository,
         private readonly cronProducerService: CronProducerService
     ) { }
-
-    @Cron('*/30 * * * * *')
-    async checkQueue() {
-        console.log('cron is running')
-        let allTasks: CronData[] = await this.cronRepository.checkCronJobs()
-        await this.cronProducerService.checkCronJobs(allTasks)
-    }
 
     @Timeout(1000)
     async runCronJob(): Promise<void> {
@@ -40,13 +33,13 @@ export class CronService {
         }
     }
 
-    async changeDateForNotifier(dateAndJobDto: DateAndJobDto) {
+    async changeDateForNotifier(dateAndJobDto: DateAndJobDto): Promise<CronUpdateResult> {
         try {
             const { date, name } = dateAndJobDto
             const cronDate = new Date(date)
             const { sec, minutes, hour } = getTimesFromDate(cronDate)
             const result = await this.cronRepository.UpdateCronJobTime(dateAndJobDto)
-            const cronDetails :CronData = { sec, minutes, hour, id: result.id, name, repeatId: result.repeatId }
+            const cronDetails: CronData = { sec, minutes, hour, id: result.id, name, repeatId: result.repeatId }
             await this.cronProducerService.setCronJob(cronDetails)
             return result
         } catch (e) {
@@ -62,7 +55,7 @@ export class CronService {
         }
     }
 
-    async createCronJob(dateAndJobDto: DateAndJobDto) {
+    async createCronJob(dateAndJobDto: DateAndJobDto): Promise<CronJobs> {
         try {
             const { date, name } = dateAndJobDto;
             const cronTime = new Date(date)
@@ -77,7 +70,7 @@ export class CronService {
     }
 }
 
-export function getTimesFromDate(date: Date) {
+export function getTimesFromDate(date: Date) :{ sec: number, minutes: number, hour: number } {
     const sec = date.getSeconds()
     const minutes = date.getMinutes()
     const hour = date.getHours()
